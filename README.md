@@ -1,270 +1,178 @@
-# 📈 Sales Forecasting with Prophet - Machine Learning Project
+# Supermarket Sales Analysis & Forecasting
 
-## 📖 Project Overview
+## Project Overview
+This project analyzes supermarket grocery sales data to uncover business insights and implement predictive modeling for sales forecasting. The analysis includes data exploration, visualization, and comparison of multiple time series forecasting models (ARIMA, Prophet, and XGBoost).
 
-This project implements a **predictive sales forecasting system** using machine learning to transform historical sales data into accurate future predictions. We analyze sales data from 2015-2018, identify key patterns and trends, and deploy the **Prophet model** (developed by Facebook/Meta) to forecast monthly sales with high accuracy.
+## Dataset Information
+- **Source**: Retail Analytics Dataset
+- **Records**: 9,994 transactions
+- **Time Period**: 2015-2018
+- **Features**: 10 original columns including Customer Name, Category, Sub Category, City, Order Date, Region, Sales, Discount, Profit, and State
 
-### 🎯 **Business Problem**
-Inconsistent sales forecasting was leading to:
-- Inventory management challenges
-- Suboptimal strategic planning
-- Reactive (instead of proactive) decision-making
+## Data Preparation
 
-### ✨ **Solution Delivered**
-A validated forecasting model with:
-- **10.35% average error rate**
-- **86.05% variance explained** (R² = 0.8605)
-- **64,625 RMSE** (Root Mean Square Error)
-- Ability to accurately capture seasonal patterns, especially Q4 peaks
+### Steps Performed:
+1. **Data Loading**: Imported CSV file containing supermarket sales data
+2. **Column Removal**: Dropped 'Order ID' and 'Customer Name' columns for privacy and simplicity
+3. **Date Processing**: 
+   - Converted 'Order Date' to datetime format (handled mixed date formats)
+   - Extracted Year, Month, and Date features
+4. **Feature Engineering**:
+   - Calculated Discount Amount from Discount Percentage
+   - Created new derived features for temporal analysis
+5. **Data Cleaning**:
+   - Removed 'North' region due to insufficient data
+   - Handled missing values (none found after processing)
 
----
+## Exploratory Data Analysis (EDA)
 
-## 📊 Dataset Description
+### Key Insights:
 
-### **Time Period**: 2015-2018 (monthly sales data)
-### **Key Characteristics**:
-- **Total Growth**: 67.6% increase from 2015 to 2018
-- **Seasonality**: Strong Q4 peaks (October-December)
-- **Top Categories**: Health Drinks and Soft Drinks dominate sales
-- **Product Categories**: 8 main categories including Bakery, Beverages, Eggs, Meat & Fish, etc.
+#### Product Performance:
+- **Highest Selling Category**: Snacks (1,514 units)
+- **Lowest Selling Category**: Oil & Masala (1,361 units)
+- **Top Sub Categories**: Health Drinks and Soft Drinks
+- **Most Profitable Category**: Snacks
+- **Least Profitable Category**: Oil & Masala
 
-### **Data Structure**:
-- **Temporal**: Monthly sales data
-- **Categorical**: Sales breakdown by product sub-categories
-- **Volume**: Millions of records across 4 years
+#### Geographical Analysis:
+- **Highest Sales City**: Kanyakumari
+- **Lowest Sales City**: Trichy
+- **Sales by Region**: West (47.9%), East (42.5%), Central (34.7%), South (24.4%)
 
----
+#### Temporal Patterns:
+- **Best Sales Year**: 2018
+- **Best Sales Month**: November
+- **Best Sales Date**: 20th-21st of each month
+- **Seasonal Trend**: Higher sales towards year-end, lower at year-start
 
-## 🏗️ Model Development Process
+#### Financial Insights:
+- **Discount Spending**: 30% of total revenue spent on discounts
+- **Profit Trends**: Consistent profit growth across all categories from 2015-2018
 
-### **Phase 1: Exploratory Data Analysis**
-- Identified year-over-year growth trends
-- Discovered strong seasonal patterns (Q4 peaks)
-- Analyzed top-performing product categories
-- Visualized sales distribution across months
+## Visualizations Created
 
-### **Phase 2: Model Selection & Testing**
-We evaluated three different forecasting approaches:
+### Count Plots:
+1. Products sold by Category
+2. Products sold by Sub Category  
+3. Products sold by City
+4. Products sold by Year, Month, and Date
 
-| Model | Description | Use Case | Performance (R²) |
-|-------|-------------|----------|-----------------|
-| **ARIMA** | Classical statistical model | Simple, stable patterns | -0.0139 |
-| **Prophet** | Modern Facebook model | Seasonality & holidays | **0.8605** |
-| **XGBoost** | Tree-based ML algorithm | Complex non-linear patterns | -0.2303 |
+### Bar Charts:
+1. Total sales by Category
+2. Total sales by Month
+3. Total sales by Year
+4. Total profit by Category
+5. Total profit by Sub Category
+6. Total profit by Month
 
-### **Phase 3: Model Validation**
-- **Train/Test Split**: 2015-2017 (train) vs 2018 (test)
-- **Metrics**: RMSE, MAE, R² Score
-- **Overfitting Check**: Bayesian regularization in Prophet
-- **Generalization**: Strong performance on unseen 2018 data
+## Forecasting Models Implementation
 
-### **Phase 4: Business Implementation**
-- Monthly sales forecasts with confidence intervals
-- Strategic recommendations for inventory management
-- Product category optimization strategies
+### Models Compared:
+1. **ARIMA (AutoRegressive Integrated Moving Average)**
+   - Order: (5,1,2)
+   - RMSE: 174,247
+   - MAE: 156,415
+   - R²: -0.0139
 
----
+2. **Prophet (Facebook's Forecasting Tool)**
+   - RMSE: 64,625
+   - MAE: 47,993
+   - R²: 0.8605
 
-## 💻 Technical Implementation
+3. **XGBoost (Extreme Gradient Boosting)**
+   - RMSE: 191,947
+   - MAE: 133,681
+   - R²: -0.2303
 
-### **Prerequisites**
-```bash
-Python 3.8+
-Required Libraries: pandas, numpy, matplotlib, seaborn, prophet, scikit-learn
+### Model Performance Comparison:
+```
+MODEL       RMSE      MAE       R² Score
+----------------------------------------
+ARIMA       174,247   156,415   -0.0139
+Prophet     64,625    47,993    0.8605
+XGBoost     191,947   133,681   -0.2303
 ```
 
-### **Installation**
-```bash
-pip install pandas numpy matplotlib seaborn prophet scikit-learn
-```
+**Best Model**: Prophet (Lowest RMSE: 64,625)
 
-### **Project Structure**
-```
-sales-forecasting/
-│
-├── data/
-│   ├── sales_2015_2017.csv     # Training data
-│   ├── sales_2018.csv          # Testing data
-│   └── sales_metadata.json     # Data descriptions
-│
-├── notebooks/
-│   ├── 01_eda.ipynb            # Exploratory Data Analysis
-│   ├── 02_model_training.ipynb # Model training & comparison
-│   └── 03_model_evaluation.ipynb # Results analysis
-│
-├── src/
-│   ├── data_preprocessing.py   # Data cleaning & preparation
-│   ├── model_training.py       # Model training pipeline
-│   ├── forecasting.py          # Prediction functions
-│   └── visualization.py        # Plotting functions
-│
-├── models/
-│   └── prophet_model.pkl       # Saved Prophet model
-│
-├── reports/
-│   ├── model_performance.md    # Detailed results
-│   └── business_recommendations.md # Actionable insights
-│
-└── README.md                   # This file
-```
+## Overfitting Analysis & Solutions
 
-### **Code Example: Prophet Implementation**
-```python
-# Import required libraries
-import pandas as pd
-from prophet import Prophet
-from sklearn.metrics import mean_squared_error, r2_score
-import matplotlib.pyplot as plt
+### Issues Identified:
+- High variance in cross-validation scores
+- Potential overfitting in initial models
 
-def train_prophet_model(data_path):
-    """
-    Train Prophet model on sales data
-    """
-    # Load and prepare data
-    df = pd.read_csv(data_path)
-    df['ds'] = pd.to_datetime(df['date'])
-    df['y'] = df['sales']
-    
-    # Initialize Prophet model with seasonality
-    model = Prophet(
-        yearly_seasonality=True,
-        seasonality_mode='multiplicative',
-        changepoint_prior_scale=0.05
-    )
-    
-    # Add custom seasonality for Q4 peaks
-    model.add_seasonality(
-        name='quarterly',
-        period=90.25,  # Approximately quarterly
-        fourier_order=5
-    )
-    
-    # Train the model
-    model.fit(df[['ds', 'y']])
-    
-    return model
+### Solutions Implemented:
+1. **XGBoost Regularization**:
+   - Reduced max_depth to 2
+   - Added L1 (reg_alpha=0.1) and L2 (reg_lambda=1.0) penalties
+   - Implemented feature subsampling (subsample=0.8, colsample_bytree=0.8)
 
-def generate_forecast(model, periods=12):
-    """
-    Generate future forecasts
-    """
-    # Create future dataframe
-    future = model.make_future_dataframe(
-        periods=periods,
-        freq='M'  # Monthly frequency
-    )
-    
-    # Generate predictions
-    forecast = model.predict(future)
-    
-    return forecast
+2. **Data Splitting Strategy**:
+   - Training: 2015-2017 data
+   - Testing: 2018 data (completely unseen)
 
-def evaluate_model(actual, predicted):
-    """
-    Evaluate model performance
-    """
-    rmse = mean_squared_error(actual, predicted, squared=False)
-    mae = abs(actual - predicted).mean()
-    r2 = r2_score(actual, predicted)
-    
-    return {
-        'RMSE': rmse,
-        'MAE': mae,
-        'R2_Score': r2
-    }
-```
+3. **Removed Stacked Ensembling**: Eliminated meta-model to prevent data leakage
 
----
+4. **Time Series Cross-Validation**: 3-fold validation to assess generalization
 
-## 📈 Results & Performance
+## Binary Classification Results
 
-### **Model Performance Metrics**
+### High/Low Sales Prediction:
+- **Threshold**: 240,341 (median of training data)
+- **Accuracy**: 100%
+- **Confusion Matrix**:
+  ```
+  [[ 2  0]
+   [ 0 10]]
+  ```
+- **Precision & Recall**: 100% for both classes
 
-| Metric | Prophet | ARIMA | XGBoost | **Winner** |
-|--------|---------|-------|---------|------------|
-| **RMSE** | 64,625 | 174,247 | 191,947 | **Prophet** |
-| **MAE** | 47,993 | 156,415 | 133,681 | **Prophet** |
-| **R² Score** | 0.8605 | -0.0139 | -0.2303 | **Prophet** |
+## Business Recommendations
 
-### **Key Achievements**
-1. **High Accuracy**: 86.05% variance explained in test data
-2. **Seasonal Capture**: Accurately predicts Q4 sales peaks
-3. **Binary Classification**: 100% accuracy in High/Low sales prediction
-4. **Business Ready**: Validated and regularized model
+### Inventory Management:
+1. **Increase Stock**:
+   - Health Drinks and Soft Drinks (top sellers and most profitable)
+   - Snacks category (highest volume and profit)
 
----
+2. **Decrease Stock**:
+   - Oil & Masala category (lowest sales and profit)
+   - Chicken sub-category (least profitable)
 
-## 🚀 Business Applications
+### Promotional Strategy:
+1. **Timing**:
+   - Focus promotions in November (highest sales month)
+   - Target mid-month (20th-21st) for peak effectiveness
 
-### **Immediate Actions Recommended**
-1. **January 2019 Forecast**: Use Prophet model to predict next month's sales
-2. **Inventory Optimization**: 
-   - Increase focus on **Health Drinks** and **Soft Drinks** (top 20%)
-   - Decrease focus on **Oil & Masala** and **Chicken** (bottom 20%)
-3. **Marketing Strategy**: Target promotions around predicted high-sales periods
+2. **Discount Optimization**:
+   - Review 30% discount spending for ROI improvement
+   - Consider targeted discounts rather than blanket reductions
 
-### **Strategic Impact**
-- **Operational Planning**: Accurate monthly sales targets
-- **Inventory Management**: Reduced stockouts and overstock
-- **Resource Allocation**: Optimized staffing and marketing spend
-- **Proactive Decision Making**: Move from hindsight to foresight
+### Regional Focus:
+1. **Priority Markets**:
+   - West region (47.9% of total sales)
+   - Kanyakumari city (highest sales volume)
 
----
+## Technical Implementation Details
 
-## 📋 Next Steps & Future Work
+### Libraries Used:
+- pandas, numpy for data manipulation
+- matplotlib, seaborn for visualization
+- statsmodels for ARIMA implementation
+- prophet for Facebook's forecasting model
+- xgboost for gradient boosting
+- scikit-learn for metrics and validation
 
-### **Short-term (Next Quarter)**
-1. **Integration**: Embed model into sales dashboard
-2. **Monitoring**: Track forecast vs actual performance
-3. **Retraining**: Update model with latest sales data
+### Code Structure:
+1. Data loading and preprocessing
+2. Exploratory data analysis
+3. Feature engineering
+4. Model implementation and comparison
+5. Overfitting analysis and regularization
+6. Business insights generation
 
-### **Medium-term (Next 6 Months)**
-1. **Granular Forecasting**: Product-level predictions
-2. **External Factors**: Incorporate promotions, holidays, economic indicators
-3. **Automation**: Automated report generation
+## Conclusion
 
-### **Long-term (Next Year)**
-1. **Real-time Forecasting**: Daily/weekly predictions
-2. **Anomaly Detection**: Identify unusual sales patterns
-3. **Prescriptive Analytics**: Recommend specific actions
+The Prophet model emerged as the best forecasting tool for this supermarket sales data, demonstrating strong predictive capability with an RMSE of 64,625 and R² score of 0.8605. The analysis provides actionable insights for inventory optimization, promotional timing, and regional strategy, supported by comprehensive data visualization and rigorous model validation.
 
----
-
-## 🎓 Learning Outcomes
-
-### **Technical Skills Developed**
-- Time series analysis and preprocessing
-- Multiple model comparison and selection
-- Model validation and regularization techniques
-- Business intelligence translation
-
-### **Business Insights Gained**
-- Understanding seasonal sales patterns
-- Identifying key product categories
-- Connecting data science to business strategy
-- Creating actionable recommendations
-
----
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
-
-## 👥 Acknowledgments
-
-- **Facebook/Meta** for developing the Prophet library
-- **Scikit-learn** team for machine learning tools
-- **Pandas** team for data manipulation capabilities
-- All open-source contributors to the Python data science ecosystem
-
-
-**Tags**: `machine-learning` `time-series` `forecasting` `prophet` `sales-analytics` `business-intelligence` `python` `data-science`
-
-**Last Updated**: March 2024
+The implemented regularization techniques successfully addressed overfitting concerns, resulting in models that generalize well to unseen data while maintaining strong predictive performance.
